@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Documentation (optional - can be included if needed)
+README.md
+LICENSE
+
+# Docker files (don't need to copy themselves)
+Dockerfile
+docker-compose.yml
+.dockerignore
