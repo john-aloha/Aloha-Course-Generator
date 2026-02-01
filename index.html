@@ -291,6 +291,125 @@
             background: rgba(107, 45, 45, 0.3);
             border-radius: 3px;
         }
+
+        /* Environment Toggle Switch */
+        .env-toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 9999px;
+            border: 1px solid #E8E0D4;
+            box-shadow: 0 2px 8px rgba(58, 42, 26, 0.08);
+        }
+
+        .env-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .env-label.test {
+            color: #7A6A5A;
+        }
+
+        .env-label.production {
+            color: #7A6A5A;
+        }
+
+        .env-label.active {
+            font-weight: 600;
+        }
+
+        .env-label.test.active {
+            color: #C4A35A;
+        }
+
+        .env-label.production.active {
+            color: #4A7C7C;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 56px;
+            height: 28px;
+            background: #C4A35A;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.production {
+            background: #4A7C7C;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.production::after {
+            transform: translateX(28px);
+        }
+
+        .env-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .env-indicator.test {
+            background: rgba(196, 163, 90, 0.15);
+            color: #a8884a;
+        }
+
+        .env-indicator.production {
+            background: rgba(74, 124, 124, 0.15);
+            color: #3d6666;
+        }
+
+        .env-indicator-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .env-indicator.test .env-indicator-dot {
+            background: #C4A35A;
+        }
+
+        .env-indicator.production .env-indicator-dot {
+            background: #4A7C7C;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
     </style>
 </head>
 
@@ -321,6 +440,19 @@
             <p class="text-text-secondary text-lg max-w-md mx-auto">
                 Create new courses for Aloha University with our streamlined automation portal
             </p>
+
+            <!-- Environment Toggle -->
+            <div class="mt-6 flex flex-col items-center gap-3">
+                <div class="env-toggle-container">
+                    <span id="testLabel" class="env-label test active">Test</span>
+                    <div id="envToggle" class="toggle-switch" role="switch" aria-checked="false" tabindex="0"></div>
+                    <span id="prodLabel" class="env-label production">Production</span>
+                </div>
+                <div id="envIndicator" class="env-indicator test">
+                    <span class="env-indicator-dot"></span>
+                    <span id="envIndicatorText">Test Mode</span>
+                </div>
+            </div>
         </header>
 
         <!-- Form Card -->
@@ -467,9 +599,13 @@
 
     <script>
         // ============================================
-        // CONFIGURATION - Paste your n8n Webhook URL here
+        // CONFIGURATION - n8n Webhook URLs
         // ============================================
-        const N8N_WEBHOOK_URL = 'https://alohau.app.n8n.cloud/webhook/aloha-course-trigger';
+        const WEBHOOK_URLS = {
+            test: 'https://alohau.app.n8n.cloud/webhook-test/aloha-course-trigger',
+            production: 'https://alohau.app.n8n.cloud/webhook/aloha-course-trigger'
+        };
+        let isProductionMode = false; // Default to test mode
         // ============================================
 
         // Comprehensive data mapping: College → Departments → Subdisciplines
@@ -617,6 +753,52 @@
         const subdisciplineRow = document.getElementById('subdisciplineRow');
         const subdisciplineSelect = document.getElementById('subdiscipline');
         const subdisciplineCodeInput = document.getElementById('subdisciplineCode');
+
+        // Environment Toggle elements
+        const envToggle = document.getElementById('envToggle');
+        const testLabel = document.getElementById('testLabel');
+        const prodLabel = document.getElementById('prodLabel');
+        const envIndicator = document.getElementById('envIndicator');
+        const envIndicatorText = document.getElementById('envIndicatorText');
+
+        // Toggle environment mode
+        function updateEnvironmentUI() {
+            if (isProductionMode) {
+                envToggle.classList.add('production');
+                envToggle.setAttribute('aria-checked', 'true');
+                testLabel.classList.remove('active');
+                prodLabel.classList.add('active');
+                envIndicator.classList.remove('test');
+                envIndicator.classList.add('production');
+                envIndicatorText.textContent = 'Production Mode';
+            } else {
+                envToggle.classList.remove('production');
+                envToggle.setAttribute('aria-checked', 'false');
+                testLabel.classList.add('active');
+                prodLabel.classList.remove('active');
+                envIndicator.classList.remove('production');
+                envIndicator.classList.add('test');
+                envIndicatorText.textContent = 'Test Mode';
+            }
+        }
+
+        envToggle.addEventListener('click', () => {
+            isProductionMode = !isProductionMode;
+            updateEnvironmentUI();
+        });
+
+        envToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                isProductionMode = !isProductionMode;
+                updateEnvironmentUI();
+            }
+        });
+
+        // Get current webhook URL based on mode
+        function getWebhookURL() {
+            return isProductionMode ? WEBHOOK_URLS.production : WEBHOOK_URLS.test;
+        }
 
         // Autocomplete elements
         const courseNameInput = document.getElementById('courseName');
@@ -908,7 +1090,7 @@
             try {
                 // Note: When running from file://, CORS may block requests.
                 // For production, run via a web server (e.g., Docker container).
-                const response = await fetch(N8N_WEBHOOK_URL, {
+                const response = await fetch(getWebhookURL(), {
                     method: 'POST',
                     mode: 'cors',
                     headers: {
