@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aloha Course Generator | Create New Courses</title>
+    <meta name="description"
+        content="Create and manage courses for Aloha University with our streamlined course generation portal.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts - Matching Aloha University -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        // Aloha University Brand Colors
+                        burgundy: {
+                            50: '#fdf5f5',
+                            100: '#f9e6e6',
+                            200: '#f2cdcd',
+                            300: '#e6a3a3',
+                            400: '#d67070',
+                            500: '#8B3D3D',
+                            600: '#6B2D2D',
+                            700: '#5a2626',
+                            800: '#4a1f1f',
+                            900: '#3d1a1a',
+                        },
+                        teal: {
+                            50: '#f0f7f7',
+                            100: '#dceaea',
+                            200: '#b8d5d5',
+                            300: '#8dbebe',
+                            400: '#5f9e9e',
+                            500: '#4A7C7C',
+                            600: '#3d6666',
+                            700: '#335555',
+                            800: '#2a4545',
+                            900: '#233939',
+                        },
+                        gold: {
+                            50: '#fdfaf3',
+                            100: '#f9f0db',
+                            200: '#f2e0b7',
+                            300: '#e6ca8a',
+                            400: '#d4b06a',
+                            500: '#C4A35A',
+                            600: '#a8884a',
+                            700: '#8c703d',
+                            800: '#735a33',
+                            900: '#5e4a2b',
+                        },
+                        cream: {
+                            50: '#FEFDFB',
+                            100: '#FBF8F3',
+                            200: '#F5F0E8',
+                            300: '#E8E0D4',
+                            400: '#D4C9BA',
+                            500: '#BFB19F',
+                        },
+                        forest: {
+                            500: '#2D4A3A',
+                            600: '#243C2F',
+                            700: '#1C2E24',
+                        },
+                        text: {
+                            primary: '#3A2A1A',
+                            secondary: '#5C4A3A',
+                            muted: '#7A6A5A',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom animations and effects */
+        @keyframes gradient {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(107, 45, 45, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(58, 42, 26, 0.15);
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(74, 124, 124, 0.3);
+        }
+
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-shimmer:hover::before {
+            left: 100%;
+        }
+
+        .loader {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin-slow 1s linear infinite;
+        }
+
+        /* Decorative elements - Aloha University Colors */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #6B2D2D, #8B3D3D);
+            top: -150px;
+            right: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #4A7C7C, #5f9e9e);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #C4A35A, #d4b06a);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Toast notifications */
+        .toast {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Auto-filled field styling */
+        .auto-filled {
+            background: rgba(74, 124, 124, 0.08) !important;
+            border-color: rgba(74, 124, 124, 0.3) !important;
+        }
+
+        /* Code field styling */
+        .code-field {
+            font-family: 'Monaco', 'Consolas', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        /* Autocomplete dropdown */
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            background: #FEFDFB;
+            border: 1px solid #E8E0D4;
+            border-radius: 0.75rem;
+            margin-top: 4px;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(58, 42, 26, 0.2);
+        }
+
+        .autocomplete-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #E8E0D4;
+            transition: background 0.15s;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background: rgba(74, 124, 124, 0.1);
+        }
+
+        .autocomplete-item-name {
+            font-weight: 500;
+            color: #3A2A1A;
+        }
+
+        .autocomplete-item-code {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.75rem;
+            color: #6B2D2D;
+            margin-left: 8px;
+        }
+
+        .autocomplete-item-meta {
+            font-size: 0.75rem;
+            color: #7A6A5A;
+            margin-top: 2px;
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .autocomplete-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(107, 45, 45, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-cream-200 font-sans text-text-primary overflow-x-hidden">
+    <!-- Background decorations -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="orb orb-1 animate-float"></div>
+        <div class="orb orb-2 animate-float" style="animation-delay: -3s;"></div>
+        <div class="orb orb-3 animate-float" style="animation-delay: -1.5s;"></div>
+    </div>
+
+    <!-- Main content -->
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <div class="inline-flex items-center gap-3 mb-4">
+                <div
+                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-burgundy-500 to-burgundy-600 flex items-center justify-center shadow-lg shadow-burgundy-600/30">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-serif font-bold text-burgundy-600">
+                    Aloha Course Generator
+                </h1>
+            </div>
+            <p class="text-text-secondary text-lg max-w-md mx-auto">
+                Create new courses for Aloha University with our streamlined automation portal
+            </p>
+        </header>
+
+        <!-- Form Card -->
+        <main class="w-full max-w-2xl">
+            <div class="glass-card rounded-2xl p-8 shadow-2xl">
+                <form id="courseForm" class="space-y-6">
+                    <!-- Course Name with Autocomplete -->
+                    <div class="space-y-2">
+                        <label for="courseName" class="block text-sm font-medium text-text-primary">
+                            Course Name
+                            <span class="text-xs text-text-muted ml-2">Start typing to see suggestions</span>
+                        </label>
+                        <div class="autocomplete-container">
+                            <input type="text" id="courseName" name="courseName"
+                                placeholder="Search courses or enter custom name..." required autocomplete="off"
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-teal-500 input-glow transition-all duration-200">
+                            <div id="courseDropdown" class="autocomplete-dropdown hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Course Level & Code Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="courseLevel" class="block text-sm font-medium text-text-primary">
+                                Course Level
+                            </label>
+                            <input type="text" id="courseLevel" name="courseLevel" placeholder="e.g., Junior" required
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-teal-500 input-glow transition-all duration-200">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="courseCode" class="block text-sm font-medium text-text-primary">
+                                Course Code
+                            </label>
+                            <input type="text" id="courseCode" name="courseCode" placeholder="e.g., MKT 301" required
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary placeholder-text-muted focus:outline-none focus:border-teal-500 input-glow transition-all duration-200">
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="border-t border-cream-400 pt-2">
+                        <p class="text-xs text-burgundy-600 uppercase tracking-wider mb-4 font-medium">Organization
+                            Structure</p>
+                    </div>
+
+                    <!-- College & College Code -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="college" class="block text-sm font-medium text-text-primary">
+                                College
+                            </label>
+                            <select id="college" name="college" required
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary focus:outline-none focus:border-teal-500 input-glow transition-all duration-200 cursor-pointer">
+                                <option value="" disabled selected>Select a college...</option>
+                                <option value="College of Business">College of Business</option>
+                                <option value="College of Computing">College of Computing</option>
+                                <option value="College of Education">College of Education</option>
+                                <option value="College of Engineering">College of Engineering</option>
+                                <option value="College of Health Sciences">College of Health Sciences</option>
+                                <option value="College of Humanities">College of Humanities</option>
+                                <option value="College of Science">College of Science</option>
+                                <option value="College of Social Sciences">College of Social Sciences</option>
+                                <option value="College of the Arts">College of the Arts</option>
+                                <option value="College of the Environment">College of the Environment</option>
+                                <option value="Aloha University">Aloha University</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="collegeCode" class="block text-sm font-medium text-text-primary">
+                                College Code
+                            </label>
+                            <input type="text" id="collegeCode" name="collegeCode" readonly
+                                class="w-full px-4 py-3 bg-cream-100 border border-cream-400 rounded-xl text-teal-600 code-field cursor-not-allowed auto-filled">
+                        </div>
+                    </div>
+
+                    <!-- Department, Department Code & Account ID -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="department" class="block text-sm font-medium text-text-primary">
+                                Department
+                            </label>
+                            <select id="department" name="department" required
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary focus:outline-none focus:border-teal-500 input-glow transition-all duration-200 cursor-pointer">
+                                <option value="" disabled selected>Select a department...</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="departmentCode" class="block text-sm font-medium text-text-primary">
+                                Dept Code
+                            </label>
+                            <input type="text" id="departmentCode" name="departmentCode" readonly
+                                class="w-full px-4 py-3 bg-cream-100 border border-cream-400 rounded-xl text-teal-600 code-field cursor-not-allowed auto-filled">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="accountId" class="block text-sm font-medium text-text-primary">
+                                Account ID
+                            </label>
+                            <input type="number" id="accountId" name="accountId" readonly
+                                class="w-full px-4 py-3 bg-cream-100 border border-cream-400 rounded-xl text-teal-600 code-field cursor-not-allowed auto-filled">
+                        </div>
+                    </div>
+
+                    <!-- Subdiscipline & Subdiscipline Code -->
+                    <div id="subdisciplineRow" class="grid grid-cols-1 md:grid-cols-3 gap-4 hidden">
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="subdiscipline" class="block text-sm font-medium text-text-primary">
+                                Subdiscipline <span class="text-text-muted">(Optional)</span>
+                            </label>
+                            <select id="subdiscipline" name="subdiscipline"
+                                class="w-full px-4 py-3 bg-white border border-cream-400 rounded-xl text-text-primary focus:outline-none focus:border-teal-500 input-glow transition-all duration-200 cursor-pointer">
+                                <option value="" selected>No subdiscipline</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="subdisciplineCode" class="block text-sm font-medium text-text-primary">
+                                Sub Code
+                            </label>
+                            <input type="text" id="subdisciplineCode" name="subdisciplineCode" readonly
+                                class="w-full px-4 py-3 bg-cream-100 border border-cream-400 rounded-xl text-teal-600 code-field cursor-not-allowed auto-filled">
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn"
+                        class="w-full py-4 bg-gradient-to-r from-burgundy-600 to-burgundy-700 hover:from-burgundy-500 hover:to-burgundy-600 text-white font-semibold rounded-xl shadow-lg shadow-burgundy-600/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] btn-shimmer flex items-center justify-center gap-2 mt-8">
+                        <span id="btnText">Create Course</span>
+                        <div id="btnLoader" class="loader hidden"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer info -->
+            <p class="text-center text-text-muted text-sm mt-6">
+                Powered by n8n automation workflow
+            </p>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-3"></div>
+
+    <!-- Course suggestions data -->
+    <script src="courses.js"></script>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - Paste your n8n Webhook URL here
+        // ============================================
+        const N8N_WEBHOOK_URL = 'https://alohau.app.n8n.cloud/webhook-test/aloha-course-trigger';
+        // ============================================
+
+        // Comprehensive data mapping: College → Departments → Subdisciplines
+        const UNIVERSITY_DATA = {
+            'College of Business': {
+                code: 'COB',
+                departments: {
+                    'Accounting': { code: 'ACC', accountId: 14, subdisciplines: {} },
+                    'Business Analytics': { code: 'BAN', accountId: 15, subdisciplines: {} },
+                    'Economics': { code: 'ECO', accountId: 29, subdisciplines: {} },
+                    'Finance': { code: 'FIN', accountId: 30, subdisciplines: {} },
+                    'Legal Studies': { code: 'LGS', accountId: 31, subdisciplines: { 'Paralegal Studies': 'PAR' } },
+                    'Management': {
+                        code: 'MGT',
+                        accountId: 32,
+                        subdisciplines: {
+                            'Entrepreneurship': 'ENT',
+                            'Human Resources': 'HRM',
+                            'Hospitality Management': 'HSP',
+                            'International Business': 'INT',
+                            'Organizational Leadership': 'ORL',
+                            'Project Management': 'PMT',
+                            'Supply Chain & Logistics': 'SCL'
+                        }
+                    },
+                    'Marketing': { code: 'MKT', accountId: 33, subdisciplines: {} },
+                    'Public Administration': { code: 'PLP', accountId: 34, subdisciplines: { 'Emergency Management': 'EMG' } }
+                }
+            },
+            'College of Computing': {
+                code: 'CCO',
+                departments: {
+                    'Artificial Intelligence': { code: 'AIT', accountId: 22, subdisciplines: {} },
+                    'Computer Science': { code: 'CSC', accountId: 23, subdisciplines: {} },
+                    'Cybersecurity': { code: 'CYB', accountId: 24, subdisciplines: {} },
+                    'Data Science': { code: 'DAS', accountId: 25, subdisciplines: {} },
+                    'Information Technology': { code: 'INF', accountId: 26, subdisciplines: {} }
+                }
+            },
+            'College of Education': {
+                code: 'CED',
+                departments: {
+                    'Education': {
+                        code: 'EDU',
+                        accountId: 40,
+                        subdisciplines: {
+                            'Educational Leadership': 'EDL',
+                            'Instructional Design': 'IDL'
+                        }
+                    }
+                }
+            },
+            'College of Engineering': {
+                code: 'COE',
+                departments: {
+                    'Civil & Environmental Engineering': { code: 'CEE', accountId: 41, subdisciplines: {} },
+                    'Electrical Engineering': { code: 'ECE', accountId: 42, subdisciplines: {} },
+                    'Industrial & Systems Engineering': { code: 'ISE', accountId: 43, subdisciplines: {} },
+                    'Mechanical Engineering': { code: 'MEE', accountId: 44, subdisciplines: {} }
+                }
+            },
+            'College of Health Sciences': {
+                code: 'CHS',
+                departments: {
+                    'Communication Sciences & Disorders': { code: 'CSD', accountId: 45, subdisciplines: {} },
+                    'Nutrition': { code: 'NTR', accountId: 46, subdisciplines: {} },
+                    'Public Health': {
+                        code: 'PUH',
+                        accountId: 47,
+                        subdisciplines: {
+                            'Healthcare Administration': 'HCA',
+                            'Health Informatics': 'HIN'
+                        }
+                    }
+                }
+            },
+            'College of Humanities': {
+                code: 'COH',
+                departments: {
+                    'Communication': { code: 'COM', accountId: 48, subdisciplines: {} },
+                    'English': { code: 'ENG', accountId: 49, subdisciplines: {} },
+                    'Geography': { code: 'GEO', accountId: 50, subdisciplines: {} },
+                    'History': { code: 'HIS', accountId: 51, subdisciplines: {} },
+                    'Philosophy': { code: 'PHI', accountId: 52, subdisciplines: {} },
+                    'Religious Studies': { code: 'REL', accountId: 53, subdisciplines: {} }
+                }
+            },
+            'College of Science': {
+                code: 'COS',
+                departments: {
+                    'Biology': { code: 'BIO', accountId: 54, subdisciplines: {} },
+                    'Chemistry': { code: 'CHE', accountId: 55, subdisciplines: { 'Biochemistry': 'BCH' } },
+                    'Mathematics': { code: 'MAT', accountId: 56, subdisciplines: { 'Actuarial Science': 'ACT' } },
+                    'Physics': { code: 'PHY', accountId: 57, subdisciplines: {} },
+                    'Statistics': { code: 'STA', accountId: 58, subdisciplines: {} }
+                }
+            },
+            'College of Social Sciences': {
+                code: 'CSS',
+                departments: {
+                    'Anthropology': { code: 'ANT', accountId: 59, subdisciplines: {} },
+                    'Criminal Justice': { code: 'CRJ', accountId: 60, subdisciplines: {} },
+                    'Gender & Sexuality Studies': { code: 'GSX', accountId: 61, subdisciplines: {} },
+                    'Political Science': { code: 'POL', accountId: 62, subdisciplines: {} },
+                    'Psychology': { code: 'PSY', accountId: 63, subdisciplines: {} },
+                    'Sociology': { code: 'SOC', accountId: 64, subdisciplines: {} }
+                }
+            },
+            'College of the Arts': {
+                code: 'COA',
+                departments: {
+                    'Art History': { code: 'AHI', accountId: 65, subdisciplines: {} },
+                    'Film & Media Studies': { code: 'FMS', accountId: 66, subdisciplines: {} },
+                    'Music': { code: 'MUS', accountId: 67, subdisciplines: {} },
+                    'Visual Arts': { code: 'VIS', accountId: 68, subdisciplines: {} }
+                }
+            },
+            'College of the Environment': {
+                code: 'CEV',
+                departments: {
+                    'Environmental Science': { code: 'ENV', accountId: 69, subdisciplines: {} },
+                    'Earth & Planetary Sciences': { code: 'EPS', accountId: 70, subdisciplines: { 'Geospatial Science': 'GSS' } }
+                }
+            },
+            'Aloha University': {
+                code: 'N/A',
+                departments: {
+                    'University Core': { code: 'UNI', accountId: 1, subdisciplines: {} }
+                }
+            }
+        };
+
+        // DOM Elements
+        const form = document.getElementById('courseForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
+        const toastContainer = document.getElementById('toastContainer');
+
+        const collegeSelect = document.getElementById('college');
+        const collegeCodeInput = document.getElementById('collegeCode');
+        const departmentSelect = document.getElementById('department');
+        const departmentCodeInput = document.getElementById('departmentCode');
+        const accountIdInput = document.getElementById('accountId');
+        const subdisciplineRow = document.getElementById('subdisciplineRow');
+        const subdisciplineSelect = document.getElementById('subdiscipline');
+        const subdisciplineCodeInput = document.getElementById('subdisciplineCode');
+
+        // Autocomplete elements
+        const courseNameInput = document.getElementById('courseName');
+        const courseDropdown = document.getElementById('courseDropdown');
+        const courseLevelInput = document.getElementById('courseLevel');
+        const courseCodeInput = document.getElementById('courseCode');
+        let activeIndex = -1;
+
+        // Autocomplete functionality
+        function filterCourses(query) {
+            if (!query || query.length < 2) return [];
+            const q = query.toLowerCase();
+            return COURSE_SUGGESTIONS.filter(c =>
+                c.name.toLowerCase().includes(q) ||
+                c.code.toLowerCase().includes(q)
+            ).slice(0, 15);
+        }
+
+        function renderDropdown(courses) {
+            if (courses.length === 0) {
+                courseDropdown.classList.add('hidden');
+                return;
+            }
+            courseDropdown.innerHTML = courses.map((c, i) => `
+                <div class="autocomplete-item${i === activeIndex ? ' active' : ''}" data-index="${i}">
+                    <div>
+                        <span class="autocomplete-item-name">${c.name}</span>
+                        <span class="autocomplete-item-code">${c.code}</span>
+                    </div>
+                    <div class="autocomplete-item-meta">${c.college} → ${c.department}${c.subdiscipline ? ' → ' + c.subdiscipline : ''}</div>
+                </div>
+            `).join('');
+            courseDropdown.classList.remove('hidden');
+        }
+
+        function selectCourse(course) {
+            // Fill course details
+            courseNameInput.value = course.name;
+            courseLevelInput.value = course.level;
+            courseCodeInput.value = course.code;
+            highlightField(courseLevelInput);
+            highlightField(courseCodeInput);
+
+            // Set college and trigger update
+            collegeSelect.value = course.college;
+            if (UNIVERSITY_DATA[course.college]) {
+                collegeCodeInput.value = UNIVERSITY_DATA[course.college].code;
+                highlightField(collegeCodeInput);
+            }
+            updateDepartments(course.college);
+
+            // Set department after a brief delay to allow DOM update
+            setTimeout(() => {
+                departmentSelect.value = course.department;
+                if (UNIVERSITY_DATA[course.college]?.departments[course.department]) {
+                    const dept = UNIVERSITY_DATA[course.college].departments[course.department];
+                    departmentCodeInput.value = dept.code;
+                    accountIdInput.value = dept.accountId;
+                    highlightField(departmentCodeInput);
+                    highlightField(accountIdInput);
+                    updateSubdisciplines(course.college, course.department);
+
+                    // Set subdiscipline if applicable
+                    if (course.subdiscipline) {
+                        setTimeout(() => {
+                            subdisciplineSelect.value = course.subdiscipline;
+                            if (dept.subdisciplines[course.subdiscipline]) {
+                                subdisciplineCodeInput.value = dept.subdisciplines[course.subdiscipline];
+                                highlightField(subdisciplineCodeInput);
+                            }
+                        }, 50);
+                    }
+                }
+            }, 50);
+
+            courseDropdown.classList.add('hidden');
+            activeIndex = -1;
+        }
+
+        courseNameInput.addEventListener('input', () => {
+            const courses = filterCourses(courseNameInput.value);
+            activeIndex = -1;
+            renderDropdown(courses);
+        });
+
+        courseNameInput.addEventListener('keydown', (e) => {
+            const items = courseDropdown.querySelectorAll('.autocomplete-item');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                renderDropdown(filterCourses(courseNameInput.value));
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                renderDropdown(filterCourses(courseNameInput.value));
+            } else if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                const courses = filterCourses(courseNameInput.value);
+                if (courses[activeIndex]) selectCourse(courses[activeIndex]);
+            } else if (e.key === 'Escape') {
+                courseDropdown.classList.add('hidden');
+                activeIndex = -1;
+            }
+        });
+
+        courseDropdown.addEventListener('click', (e) => {
+            const item = e.target.closest('.autocomplete-item');
+            if (item) {
+                const courses = filterCourses(courseNameInput.value);
+                const index = parseInt(item.dataset.index);
+                if (courses[index]) selectCourse(courses[index]);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-container')) {
+                courseDropdown.classList.add('hidden');
+                activeIndex = -1;
+            }
+        });
+
+        // Highlight animation for auto-filled fields
+        function highlightField(element) {
+            element.classList.add('ring-2', 'ring-teal-500/50');
+            setTimeout(() => {
+                element.classList.remove('ring-2', 'ring-teal-500/50');
+            }, 500);
+        }
+
+        // Update department dropdown based on selected college
+        function updateDepartments(collegeName) {
+            departmentSelect.innerHTML = '<option value="" disabled selected>Select a department...</option>';
+            departmentCodeInput.value = '';
+            accountIdInput.value = '';
+            subdisciplineRow.classList.add('hidden');
+            subdisciplineSelect.innerHTML = '<option value="" selected>No subdiscipline</option>';
+            subdisciplineCodeInput.value = '';
+
+            if (collegeName && UNIVERSITY_DATA[collegeName]) {
+                const departments = UNIVERSITY_DATA[collegeName].departments;
+                Object.keys(departments).sort().forEach(deptName => {
+                    const option = document.createElement('option');
+                    option.value = deptName;
+                    option.textContent = deptName;
+                    departmentSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Update subdiscipline dropdown based on selected department
+        function updateSubdisciplines(collegeName, departmentName) {
+            subdisciplineSelect.innerHTML = '<option value="" selected>No subdiscipline</option>';
+            subdisciplineCodeInput.value = '';
+
+            if (collegeName && departmentName && UNIVERSITY_DATA[collegeName]) {
+                const dept = UNIVERSITY_DATA[collegeName].departments[departmentName];
+                if (dept && Object.keys(dept.subdisciplines).length > 0) {
+                    subdisciplineRow.classList.remove('hidden');
+                    Object.keys(dept.subdisciplines).sort().forEach(subName => {
+                        const option = document.createElement('option');
+                        option.value = subName;
+                        option.textContent = subName;
+                        subdisciplineSelect.appendChild(option);
+                    });
+                } else {
+                    subdisciplineRow.classList.add('hidden');
+                }
+            } else {
+                subdisciplineRow.classList.add('hidden');
+            }
+        }
+
+        // College change handler
+        collegeSelect.addEventListener('change', () => {
+            const collegeName = collegeSelect.value;
+
+            if (collegeName && UNIVERSITY_DATA[collegeName]) {
+                collegeCodeInput.value = UNIVERSITY_DATA[collegeName].code;
+                highlightField(collegeCodeInput);
+            } else {
+                collegeCodeInput.value = '';
+            }
+
+            updateDepartments(collegeName);
+        });
+
+        // Department change handler
+        departmentSelect.addEventListener('change', () => {
+            const collegeName = collegeSelect.value;
+            const departmentName = departmentSelect.value;
+
+            if (collegeName && departmentName && UNIVERSITY_DATA[collegeName]) {
+                const dept = UNIVERSITY_DATA[collegeName].departments[departmentName];
+                if (dept) {
+                    departmentCodeInput.value = dept.code;
+                    accountIdInput.value = dept.accountId;
+                    highlightField(departmentCodeInput);
+                    highlightField(accountIdInput);
+
+                    updateSubdisciplines(collegeName, departmentName);
+                }
+            }
+        });
+
+        // Subdiscipline change handler
+        subdisciplineSelect.addEventListener('change', () => {
+            const collegeName = collegeSelect.value;
+            const departmentName = departmentSelect.value;
+            const subdisciplineName = subdisciplineSelect.value;
+
+            if (subdisciplineName && collegeName && departmentName && UNIVERSITY_DATA[collegeName]) {
+                const dept = UNIVERSITY_DATA[collegeName].departments[departmentName];
+                if (dept && dept.subdisciplines[subdisciplineName]) {
+                    subdisciplineCodeInput.value = dept.subdisciplines[subdisciplineName];
+                    highlightField(subdisciplineCodeInput);
+                }
+            } else {
+                subdisciplineCodeInput.value = '';
+            }
+        });
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const isSuccess = type === 'success';
+
+            toast.className = `toast flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl border ${isSuccess
+                ? 'bg-teal-600 border-teal-400 text-white'
+                : 'bg-burgundy-600 border-burgundy-400 text-white'
+                }`;
+
+            toast.innerHTML = `
+                <div class="flex-shrink-0 w-6 h-6 rounded-full ${isSuccess ? 'bg-white/20' : 'bg-white/20'} flex items-center justify-center">
+                    ${isSuccess
+                    ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
+                    : '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>'
+                }
+                </div>
+                <span class="font-medium">${message}</span>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Set loading state
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            btnText.textContent = isLoading ? 'Processing...' : 'Create Course';
+            btnLoader.classList.toggle('hidden', !isLoading);
+
+            if (isLoading) {
+                submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+            } else {
+                submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }
+        }
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Gather form data
+            const courseData = [{
+                courseName: document.getElementById('courseName').value.trim(),
+                courseLevel: document.getElementById('courseLevel').value.trim(),
+                courseCode: document.getElementById('courseCode').value.trim(),
+                account_id: parseInt(document.getElementById('accountId').value, 10),
+                college: document.getElementById('college').value,
+                collegeCode: document.getElementById('collegeCode').value,
+                department: document.getElementById('department').value,
+                departmentCode: document.getElementById('departmentCode').value,
+                subdiscipline: document.getElementById('subdiscipline').value || null,
+                subdisciplineCode: document.getElementById('subdisciplineCode').value || null
+            }];
+
+            setLoading(true);
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(courseData)
+                });
+
+                if (response.ok) {
+                    showToast('Course created successfully!', 'success');
+                    form.reset();
+                    // Reset auto-populated fields
+                    collegeCodeInput.value = '';
+                    departmentCodeInput.value = '';
+                    accountIdInput.value = '';
+                    subdisciplineCodeInput.value = '';
+                    departmentSelect.innerHTML = '<option value="" disabled selected>Select a department...</option>';
+                    subdisciplineSelect.innerHTML = '<option value="" selected>No subdiscipline</option>';
+                    subdisciplineRow.classList.add('hidden');
+                } else {
+                    throw new Error(`Server responded with status ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showToast(`Failed to create course: ${error.message}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Add subtle input animations
+        document.querySelectorAll('input:not([readonly]), select').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body>
+
+</html>
